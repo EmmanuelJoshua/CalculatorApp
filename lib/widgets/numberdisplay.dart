@@ -1,44 +1,54 @@
 import 'package:flutter/material.dart';
 
 class NumberDisplay extends StatelessWidget {
-  const NumberDisplay({
-    Key key,
-  }) : super(key: key);
+  NumberDisplay({this.displayString: '', this.resultString: ''});
+
+  final String displayString;
+  final String resultString;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        new Padding(
-          padding: new EdgeInsets.only(top: 100.0, right: 20.0),
-          child: new Text(
-            "5 + 5",
-            overflow: TextOverflow.fade,
-            maxLines: 1,
-            style: TextStyle(
-              color: Color(0xFFD8E5ED),
-              fontSize: 30.0,
-              fontWeight: FontWeight.w300,
+    return Flexible(
+      flex: 2,
+      child: Container(
+        color: Color(0xFFFCFCFC),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            new Padding(
+              padding: new EdgeInsets.only(top: 10.0, right: 20.0),
+              child: new Text(
+                displayString,
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                style: TextStyle(
+                  fontFamily: 'Google',
+                  color: Color(0xFF909090),
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.w300,
+                ),
+                textAlign: TextAlign.end,
+              ),
             ),
-            textAlign: TextAlign.end,
-          ),
-        ),
-        new Padding(
-          padding: new EdgeInsets.only(right: 15.0, bottom: 15.0),
-          child: new Text(
-            "100",
-            overflow: TextOverflow.fade,
-            maxLines: 1,
-            style: TextStyle(
-              fontSize: 55.0,
-              fontWeight: FontWeight.w300,
+            new Padding(
+              padding: new EdgeInsets.only(right: 15.0, bottom: 15.0),
+              child: new Text(
+                resultString,
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                style: TextStyle(
+                  fontFamily: 'Google',
+                  color: Color(0xFF4E4E4E),
+                  fontSize: 55.0,
+                  fontWeight: FontWeight.w300,
+                ),
+                textAlign: TextAlign.end,
+              ),
             ),
-            textAlign: TextAlign.end,
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

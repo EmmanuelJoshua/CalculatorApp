@@ -1,4 +1,8 @@
+import 'package:calculatorapp/widgets/buttongrid.dart';
+import 'package:calculatorapp/widgets/numberdisplay.dart';
 import 'package:flutter/material.dart';
+
+import '../calculationlogic.dart';
 
 class Calculator extends StatefulWidget {
   @override
@@ -6,6 +10,13 @@ class Calculator extends StatefulWidget {
 }
 
 class _CalculatorState extends State<Calculator> {
+  bool isNewEquation = true;
+  List<double> values = [];
+  List<String> operations = [];
+  List<String> calculations = [];
+  String displayString = '';
+  String resultString = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,54 +24,88 @@ class _CalculatorState extends State<Calculator> {
           title: Text(
             'Calculator',
             style: TextStyle(
-                fontFamily: 'PTSans',
-                fontSize: 19,
-                fontWeight: FontWeight.w500),
+                color: Colors.white,
+                fontFamily: 'Google',
+                fontSize: 20,
+                fontWeight: FontWeight.w400),
           ),
-          // elevation: 1,
-          backgroundColor: Color(0xFF161514),
+          elevation: 1,
+          backgroundColor: Color(0xFF4E4E4E),
           centerTitle: true,
         ),
-        backgroundColor: Color(0xFF151412),
-        body: Column(
+        backgroundColor: Color(0xFFFCFCFC),
+        body: Container(
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            //Number Display
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                new Padding(
-                  padding: new EdgeInsets.only(top: 100.0, right: 20.0),
-                  child: new Text(
-                    "5 + 5",
-                    overflow: TextOverflow.fade,
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: Color(0xFFD8E5ED),
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.w300,
-                    ),
-                    textAlign: TextAlign.end,
-                  ),
-                ),
-                new Padding(
-                  padding: new EdgeInsets.only(right: 15.0, bottom: 15.0),
-                  child: new Text(
-                    "100",
-                    overflow: TextOverflow.fade,
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 60.0,
-                      color: Color(0xFF84CCD9),
-                      fontWeight: FontWeight.w300,
-                    ),
-                    textAlign: TextAlign.end,
-                  ),
-                ),
-              ],
+            new NumberDisplay(
+              displayString: displayString,
+              resultString: resultString,
             ),
+            Padding(
+              padding: const EdgeInsets.only(right: 20, left: 20),
+              child: Divider(
+                thickness: 2.5,
+                color: Color(0xFF4E4E4E),
+              ),
+            ),
+            new ButtonGrid(
+              onTap: _onPressed,
+            )
           ],
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        ));
+        )));
+  }
+
+  void _onPressed({String buttonText}) {
+    // Standard mathematical operations
+    if (Calculations.OPERATIONS.contains(buttonText)) {
+      return setState(() {
+        operations.add(buttonText);
+        displayString += "$buttonText";
+        debugPrint('$displayString');
+      });
+    }
+
+    // On CLEAR press
+    if (buttonText == Calculations.CLEAR) {
+      return setState(() {
+        operations.add(Calculations.CLEAR);
+        displayString = "";
+        resultString = "";
+      });
+    }
+
+    // On Equals press
+    if (buttonText == Calculations.EQUAL) {
+      String newCalculatorString = CalculationLogic.parseString(displayString);
+
+      return setState(() {
+        if (newCalculatorString != displayString) {
+          // only add evaluated strings to calculations array
+          calculations.add(displayString);
+        }
+
+        operations.add(Calculations.EQUAL);
+        resultString = newCalculatorString;
+        isNewEquation = false;
+      });
+    }
+
+    if (buttonText == Calculations.PERIOD) {
+      return setState(() {
+        displayString = CalculationLogic.addPeriod(displayString);
+      });
+    }
+
+    setState(() {
+      if (!isNewEquation &&
+          operations.length > 0 &&
+          operations.last == Calculations.EQUAL) {
+        displayString = buttonText;
+        isNewEquation = true;
+      } else {
+        displayString += buttonText;
+      }
+    });
   }
 }
