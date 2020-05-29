@@ -66,12 +66,26 @@ class _CalculatorState extends State<Calculator> {
       });
     }
 
+    // On CLEAR ALL press
+    if (buttonText == Calculations.CLEARALL) {
+      return setState(() {
+        operations.add(Calculations.CLEARALL);
+        displayString = "";
+        resultString = "";
+      });
+    }
+
     // On CLEAR press
     if (buttonText == Calculations.CLEAR) {
       return setState(() {
         operations.add(Calculations.CLEAR);
-        displayString = "";
-        resultString = "";
+        String newDisplayString = displayString;
+        if(displayString.length == 0){
+ 
+        }else{
+           newDisplayString = newDisplayString.substring(0 , displayString.length - 1); 
+        }
+        displayString = newDisplayString;
       });
     }
 

@@ -1,4 +1,4 @@
-import 'package:function_tree/function_tree.dart';
+// import 'package:function_tree/function_tree.dart';
 
 class Calculations {
   static const PERIOD = '.';
@@ -7,7 +7,8 @@ class Calculations {
   static const ADD = '+';
   static const DIVIDE = '/';
   static const PERCENT = '%';
-  static const CLEAR = 'CE';
+  static const CLEARALL = 'CE';
+  static const CLEAR = 'C';
   static const EQUAL = '=';
   static const OPERATIONS = [
     Calculations.ADD,
@@ -30,21 +31,16 @@ class CalculationLogic {
     List<int> numbers = [];
     double a, b, result;
     if (text.contains(Calculations.ADD)) {
-      // numbersToAdd = text.split(Calculations.ADD);
-      // for (String num in numbersToAdd) {
-      //   numbers.add(int.parse(num));
-      //   if (num.contains(Calculations.ADD)) {}
+      // final expressions = [text];
+      // for (final expression in expressions) {
+      //   // print(" '$expression' = ${expression.interpret()} ");
       // }
+       numbersToAdd = text.split(Calculations.ADD);
+      a = double.parse(numbersToAdd[0]);
+      b = double.parse(numbersToAdd[1]);
 
-      final expressions = [text];
-      for (final expression in expressions) {
-        print(" '$expression' = ${expression.interpret()} ");
-      }
-      // a = double.parse(numbersToAdd[0]);
-      // b = double.parse(numbersToAdd[1]);
-
-      // result = Calculations.add(a, b);
-      print(numbers);
+      result = Calculations.add(a, b);
+      // print(numbers);
     } else if (text.contains(Calculations.MULTIPLY)) {
       numbersToAdd = text.split(Calculations.MULTIPLY);
       a = double.parse(numbersToAdd[0]);
