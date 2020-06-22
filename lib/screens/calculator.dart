@@ -1,3 +1,4 @@
+import 'package:calculatorapp/screens/history.dart';
 import 'package:calculatorapp/widgets/buttongrid.dart';
 import 'package:calculatorapp/widgets/numberdisplay.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +30,18 @@ class _CalculatorState extends State<Calculator> {
                 fontSize: 20,
                 fontWeight: FontWeight.w400),
           ),
-          elevation: 1,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.history),
+              onPressed: (){
+                var router = MaterialPageRoute(builder: (BuildContext context) => CalcHistory());
+
+                Navigator.of(context).push(router);
+              },
+            )
+          ],
           backgroundColor: Color(0xFF4E4E4E),
-          centerTitle: true,
+          // centerTitle: true,
         ),
         backgroundColor: Color(0xFFFCFCFC),
         body: Container(
