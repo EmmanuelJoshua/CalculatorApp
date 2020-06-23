@@ -66,6 +66,11 @@ class DatabaseHelper{
     return new HistoryModel.fromMap(result.first);
   }
 
+  Future<int> updateUser(int id, String notes) async {
+    var dbClient = await db;
+    return await dbClient.rawUpdate('UPDATE $tableExpression SET notes = ? WHERE id = ?', [notes, id]);
+  }
+
   Future<int> deleteExpression(int id) async {
     var dbClient = await db;
 
