@@ -1,3 +1,5 @@
+import 'package:calculatorapp/models/historymodel.dart';
+import 'package:calculatorapp/utils/dbhelper.dart';
 import 'package:function_tree/function_tree.dart';
 
 class Calculations {
@@ -22,6 +24,12 @@ class Calculations {
 }
 
 class CalculationLogic {
+
+  static addExpression(String ex) async {
+    HistoryModel historyModel = HistoryModel(expression: ex);
+    await DatabaseHelper.dbhelp.saveExpression(historyModel);
+  }
+
   static String parseString(String text) {
     List<String> numbersToAdd;
     double a, result;
@@ -33,15 +41,19 @@ class CalculationLogic {
       final expressions = [text];
       for (final expression in expressions) {
         res = double.parse(expression.interpret().toString());
-        print(" '$expression' = ${expression.interpret()} ");
+        String express = " $expression = ${expression.interpret()} ";
+        addExpression(express);
       }
       result = res;
+
     } else if (text.contains(Calculations.PERCENT)) {
       numbersToAdd = text.split(Calculations.PERCENT);
       a = double.parse(numbersToAdd[0]);
-
       result = Calculations.percent(a);
-      print(result);
+
+      String aT = a.truncate().toString();
+      String express = " $aT% = $result";
+      addExpression(express);
     } else {
       return text;
     }

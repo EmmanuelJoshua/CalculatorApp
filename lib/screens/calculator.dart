@@ -35,7 +35,6 @@ class _CalculatorState extends State<Calculator> {
               icon: Icon(Icons.history),
               onPressed: (){
                 var router = MaterialPageRoute(builder: (BuildContext context) => CalcHistory());
-
                 Navigator.of(context).push(router);
               },
             )
