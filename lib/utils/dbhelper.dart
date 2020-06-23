@@ -66,6 +66,14 @@ class DatabaseHelper{
     return new HistoryModel.fromMap(result.first);
   }
 
+  Future<List<Map<String, dynamic>>> searchExpression(String text) async {
+    var dbClient = await db;
+
+    var result = await dbClient.rawQuery("SELECT * FROM $tableExpression WHERE $columnNotes LIKE ?", ["%$text%"]);
+    if (result.length == 0) return null;
+    return result.toList();
+  }
+
   Future<int> updateUser(int id, String notes) async {
     var dbClient = await db;
     return await dbClient.rawUpdate('UPDATE $tableExpression SET notes = ? WHERE id = ?', [notes, id]);

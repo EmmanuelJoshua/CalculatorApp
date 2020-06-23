@@ -9,14 +9,31 @@ class CalcHistory extends StatefulWidget {
 }
 
 class _CalcHistoryState extends State<CalcHistory> {
+  Future<List<Map<String, dynamic>>> calculations;
+  bool searchMode = false;
+
   @override
   void initState() {
+    reloadExpressions();
     super.initState();
+  }
+
+  void searchExpressions(String text) {
+    setState(() {
+      calculations = DatabaseHelper.dbhelp.searchExpression(text);
+    });
+  }
+
+  void reloadExpressions() {
+    setState(() {
+      calculations = DatabaseHelper.dbhelp.getAllExpressions();
+    });
   }
 
   showMatDialog(int id) async {
     HistoryModel snapshot = await DatabaseHelper.dbhelp.getExpression(id);
-    TextEditingController editingController = new TextEditingController();
+    TextEditingController editingController2 =
+        new TextEditingController(text: snapshot.notes);
     showDialog(
         context: context,
         builder: (context) {
@@ -24,7 +41,7 @@ class _CalcHistoryState extends State<CalcHistory> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Container(
-              height: 300,
+              height: 210,
               width: 400,
               child: Padding(
                 padding: const EdgeInsets.all(12),
@@ -42,7 +59,7 @@ class _CalcHistoryState extends State<CalcHistory> {
                       padding: const EdgeInsets.all(3),
                     ),
                     TextField(
-                      controller: editingController,
+                      controller: editingController2,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           hintText: 'Enter notes'),
@@ -58,7 +75,8 @@ class _CalcHistoryState extends State<CalcHistory> {
                             borderRadius: BorderRadius.all(Radius.circular(3))),
                         onPressed: () {
                           DatabaseHelper.dbhelp.updateUser(
-                              id, editingController.text.toString());
+                              id, editingController2.text.toString());
+                          reloadExpressions();
                           Navigator.of(context).pop();
                         },
                         child: Text(
@@ -93,14 +111,55 @@ class _CalcHistoryState extends State<CalcHistory> {
               Navigator.of(context).pop();
             },
           ),
-          title: Text(
-            'History',
-            style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Google',
-                fontSize: 20,
-                fontWeight: FontWeight.w400),
-          ),
+          title: searchMode
+              ? SizedBox(
+                  width: 100,
+                  child: TextField(
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Google',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400),
+                    decoration: InputDecoration.collapsed(
+                      hintText: 'Search',
+                      hintStyle: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Google',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    onChanged: (text) {
+                      setState(() {
+                        if (searchMode == true)
+                          searchExpressions(text);
+                      });
+
+                    },
+                  ),
+                )
+              : Text(
+                  'History',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Google',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400),
+                ),
+          actions: [
+            IconButton(
+              icon: searchMode ? Icon(Icons.close) : Icon(Icons.search),
+              onPressed: () {
+                setState(() {
+                  if (searchMode == false) {
+                    searchMode = true;
+                  } else {
+                    searchMode = false;
+                    reloadExpressions();
+                  }
+                });
+              },
+            )
+          ],
           backgroundColor: Color(0xFF4E4E4E),
         ),
         body: Stack(
@@ -115,15 +174,21 @@ class _CalcHistoryState extends State<CalcHistory> {
 
   FutureBuilder historyBuilder() {
     return FutureBuilder<List<Map<String, dynamic>>>(
-      future: DatabaseHelper.dbhelp.getAllExpressions(),
+      future: calculations,
       builder: (BuildContext context,
           AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-        if (!snapshot.hasData) {
+        if (!snapshot.hasData || snapshot.data.length == 0) {
           return Center(
-            child: Text(
-              'No data',
-              style: TextStyle(fontSize: 22),
-            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                 Icon(Icons.do_not_disturb, size: 50, color: Color(0xFF4E4E4E),),
+                Text(
+                  'No history',
+                  style: TextStyle(fontSize: 19, color: Color(0xFF4E4E4E)),
+                ),
+              ],
+            )
           );
         } else {
           return ListView.separated(
@@ -160,6 +225,7 @@ class _CalcHistoryState extends State<CalcHistory> {
                 onDismissed: (direction) {
                   DatabaseHelper.dbhelp
                       .deleteExpression(snapshot.data[index]['id']);
+                  reloadExpressions();
                 },
                 child: ListTile(
 //                leading: ,
