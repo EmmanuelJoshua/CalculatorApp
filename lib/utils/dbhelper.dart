@@ -28,8 +28,6 @@ class DatabaseHelper{
     return _db;
   }
 
-//  DatabaseHelper.internal();
-
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(
@@ -43,14 +41,12 @@ class DatabaseHelper{
         "CREATE TABLE $tableExpression($columnId INTEGER PRIMARY KEY AUTOINCREMENT, $columnExpression TEXT NOT NULL, $columnNotes TEXT, $columnImage TEXT)");
   }
 
-  //Insertion
   Future<int> saveExpression(HistoryModel historyModel) async {
     var dbClient = await db;
     int res = await dbClient.insert("$tableExpression", historyModel.toMap());
     return res;
   }
 
-  //Get Users
   Future<List<Map<String, dynamic>>> getAllExpressions() async {
     var dbClient = await db;
     var result = await dbClient.query(tableExpression);
@@ -74,7 +70,7 @@ class DatabaseHelper{
     return result.toList();
   }
 
-  Future<int> updateUser(int id, String notes) async {
+  Future<int> updateExpression(int id, String notes) async {
     var dbClient = await db;
     return await dbClient.rawUpdate('UPDATE $tableExpression SET notes = ? WHERE id = ?', [notes, id]);
   }

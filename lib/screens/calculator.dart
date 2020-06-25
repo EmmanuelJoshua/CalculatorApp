@@ -1,9 +1,7 @@
-import 'package:calculatorapp/screens/history.dart';
+import 'package:flutter/material.dart';
 import 'package:calculatorapp/widgets/buttongrid.dart';
 import 'package:calculatorapp/widgets/numberdisplay.dart';
-import 'package:flutter/material.dart';
-
-import '../calculationlogic.dart';
+import 'package:calculatorapp/calculationlogic.dart';
 
 class Calculator extends StatefulWidget {
   @override
@@ -20,49 +18,26 @@ class _CalculatorState extends State<Calculator> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Calculator',
-            style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Google',
-                fontSize: 20,
-                fontWeight: FontWeight.w400),
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.history),
-              onPressed: (){
-                var router = MaterialPageRoute(builder: (BuildContext context) => CalcHistory());
-                Navigator.of(context).push(router);
-              },
-            )
-          ],
-          backgroundColor: Color(0xFF4E4E4E),
-          // centerTitle: true,
+    return Container(
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        new NumberDisplay(
+          displayString: displayString,
+          resultString: resultString,
         ),
-        backgroundColor: Color(0xFFFCFCFC),
-        body: Container(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            new NumberDisplay(
-              displayString: displayString,
-              resultString: resultString,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 20, left: 20),
-              child: Divider(
-                thickness: 2.5,
-                color: Color(0xFF4E4E4E),
-              ),
-            ),
-            new ButtonGrid(
-              onTap: _onPressed,
-            )
-          ],
-        )));
+        Padding(
+          padding: const EdgeInsets.only(right: 20, left: 20),
+          child: Divider(
+            thickness: 2.5,
+            color: Color(0xFF4E4E4E),
+          ),
+        ),
+        new ButtonGrid(
+          onTap: _onPressed,
+        )
+      ],
+    ));
   }
 
   void _onPressed({String buttonText}) {
@@ -89,10 +64,10 @@ class _CalculatorState extends State<Calculator> {
       return setState(() {
         operations.add(Calculations.CLEAR);
         String newDisplayString = displayString;
-        if(displayString.length == 0){
- 
-        }else{
-           newDisplayString = newDisplayString.substring(0 , displayString.length - 1); 
+        if (displayString.length == 0) {
+        } else {
+          newDisplayString =
+              newDisplayString.substring(0, displayString.length - 1);
         }
         displayString = newDisplayString;
       });

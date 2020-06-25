@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/calculator.dart';
+import 'screens/homescreen.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,6 +14,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: Calculator());
+        home: HomeScreen());
   }
 }
