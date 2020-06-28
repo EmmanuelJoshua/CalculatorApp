@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:calculatorapp/widgets/buttongrid.dart';
 import 'package:calculatorapp/widgets/numberdisplay.dart';
-import 'package:calculatorapp/calculationlogic.dart';
+import 'file:///C:/Users/DeLL/Documents/GitHub/CalculatorApp/lib/utils/calculationlogic.dart';
 
 class Calculator extends StatefulWidget {
   @override
@@ -19,25 +20,20 @@ class _CalculatorState extends State<Calculator> {
   @override
   Widget build(BuildContext context) {
     return Container(
+        color: Color(0xFF270F33),
         child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        new NumberDisplay(
-          displayString: displayString,
-          resultString: resultString,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 20, left: 20),
-          child: Divider(
-            thickness: 2.5,
-            color: Color(0xFF4E4E4E),
-          ),
-        ),
-        new ButtonGrid(
-          onTap: _onPressed,
-        )
-      ],
-    ));
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            new NumberDisplay(
+              displayString: displayString,
+              resultString: resultString,
+            ),
+            Padding(padding: const EdgeInsets.all(7)),
+            new ButtonGrid(
+              onTap: _onPressed,
+            )
+          ],
+        ));
   }
 
   void _onPressed({String buttonText}) {

@@ -1,7 +1,12 @@
 import 'package:calculatorapp/screens/calculator.dart';
 import 'package:calculatorapp/screens/currencyconverter.dart';
+import 'package:calculatorapp/screens/gstcalculator.dart';
 import 'package:calculatorapp/screens/history.dart';
+import 'package:calculatorapp/screens/tipcalculator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:line_icons/line_icons.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,69 +14,95 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int selectedIndex = 2;
 
- TabController tabController = new TabController(length: 5, vsync: ScaffoldState());
+  static List<Widget> widgetOptions = <Widget>[
+    CurrencyConverter(),
+    GSTCalc(),
+    Calculator(),
+    TipCalculator(),
+    Container(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Calculator',
-          style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Google',
-              fontSize: 20,
-              fontWeight: FontWeight.w400),
+        appBar: AppBar(
+            title: Text(
+              'Calculator',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Google',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400),
+            ),
+            actions: [
+              IconButton(
+                icon: Icon(LineIcons.history),
+                onPressed: () {
+                  var router = MaterialPageRoute(
+                      builder: (BuildContext context) => CalcHistory());
+                  Navigator.of(context).push(router);
+                },
+              )
+            ],
+            elevation: 0,
+            backgroundColor: Color(0xFF2B1137)),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.all(3),
+          child: SafeArea(
+            child: GNav(
+              onTabChange: (index) {
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+              textStyle: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Graphik',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400),
+              selectedIndex: selectedIndex,
+              gap: 8,
+              iconSize: 24,
+              activeColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              tabMargin: const EdgeInsets.all(5),
+              duration: Duration(milliseconds: 800),
+              tabBackgroundGradient: LinearGradient(
+                  colors: [
+                    Color(0xFFD46286),
+                    Color(0xFF781C50),
+                  ],
+                  tileMode: TileMode.mirror,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight),
+              tabs: [
+                GButton(
+                  icon: LineIcons.refresh,
+                  text: 'Convert',
+                ),
+                GButton(
+                  icon: LineIcons.line_chart,
+                  text: 'GST',
+                ),
+                GButton(
+                  icon: LineIcons.calculator,
+                  text: 'Calculate',
+                ),
+                GButton(
+                  icon: LineIcons.money,
+                  text: 'Tips',
+                ),
+                GButton(
+                  icon: LineIcons.ticket,
+                  text: 'Invoice',
+                ),
+              ],
+            ),
+          ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.history),
-            onPressed: () {
-              var router = MaterialPageRoute(
-                  builder: (BuildContext context) => CalcHistory());
-              Navigator.of(context).push(router);
-            },
-          )
-        ],
-        bottom: TabBar(
-          controller: tabController,
-          isScrollable: true,
-          unselectedLabelColor: Colors.white70,
-          labelColor: Colors.white,
-          indicatorSize: TabBarIndicatorSize.tab,
-          indicatorColor: Colors.white,
-          tabs: [
-            Tab(
-                child: Text('Calculator',
-                    style: TextStyle(fontSize: 15, fontFamily: 'Google'))),
-            Tab(
-                child: Text('Converter',
-                    style: TextStyle(fontSize: 15, fontFamily: 'Google'))),
-            Tab(
-                child: Text('Tips',
-                    style: TextStyle(fontSize: 15, fontFamily: 'Google'))),
-            Tab(
-                child: Text('GST',
-                    style: TextStyle(fontSize: 15, fontFamily: 'Google'))),
-            Tab(
-                child: Text('Invoice',
-                    style: TextStyle(fontSize: 15, fontFamily: 'Google')))
-          ],
-        ),
-        backgroundColor: Color(0xFF4E4E4E),
-        // centerTitle: true,
-      ),
-      backgroundColor: Color(0xFFFCFCFC),
-      body: TabBarView(
-        controller: tabController,
-          children: [
-        Calculator(),
-        CurrencyConverter(),
-        Container(),
-        Container(),
-        Container(),
-      ]),
-    );
+        backgroundColor: Color(0xFFF1F7FC),
+        body: widgetOptions.elementAt(selectedIndex));
   }
 }

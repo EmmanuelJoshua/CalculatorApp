@@ -11,7 +11,7 @@ class NumberDisplay extends StatelessWidget {
     return Flexible(
       flex: 2,
       child: Container(
-        color: Color(0xFFFCFCFC),
+        color: Color(0xFFFAFAFA),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.stretch,
