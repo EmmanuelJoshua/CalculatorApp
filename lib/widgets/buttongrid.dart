@@ -23,14 +23,14 @@ class ButtonGrid extends StatelessWidget {
           mainAxisSpacing: 8.0,
           crossAxisSpacing: 8.0,
           children: <Widget>[
+           CustomButton(
+              onTap: onTap,
+              isClear: true,
+            ),
             CustomButton(
               text: Calculations.CLEARALL,
               onTap: onTap,
               isOperation: true,
-            ),
-           CustomButton(
-              onTap: onTap,
-              isClear: true,
             ),
             CustomButton(
               text: Calculations.PERCENT,

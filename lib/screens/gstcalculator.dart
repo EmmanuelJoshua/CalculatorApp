@@ -1,6 +1,8 @@
+import 'package:calculatorapp/utils/calculationlogic.dart';
 import 'package:calculatorapp/widgets/buttongrid2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 
 class GSTCalc extends StatefulWidget {
   @override
@@ -10,28 +12,31 @@ class GSTCalc extends StatefulWidget {
 class _GSTCalcState extends State<GSTCalc> {
   TextEditingController gstamount = new TextEditingController();
   String rate1 = '28%';
-  int radioValue = 0;
+  int selectValue = -1;
 
   void handleRadioChange(int value) {
     setState(() {
-      radioValue = value;
-      switch (radioValue) {
-        case 0:
-          print('Exclusive');
-          break;
-        case 1:
-          print('Inclusive');
-          break;
-      }
+//      radioValue = value;
+//      switch (radioValue) {
+//        case 0:
+//          print('Exclusive');
+//          break;
+//        case 1:
+//          print('Inclusive');
+//          break;
+//      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.only(top: 5),
+      decoration: BoxDecoration(
+        color: Color(0xFF270F33),
+      ),
       child: Column(children: [
         Container(
-          color: Colors.white,
           child: SizedBox(
             height: 70,
             child: Row(
@@ -39,21 +44,27 @@ class _GSTCalcState extends State<GSTCalc> {
               children: [
                 Padding(
                     padding: const EdgeInsets.only(left: 14),
-                    child: SizedBox(
+                    child: Container(
                       width: 330,
-                      height: 60,
+                      height: 55,
+                      padding: const EdgeInsets.only(top: 15, left: 12),
+                      decoration: BoxDecoration(
+                          color: Color(0xFF720D5D),
+                          borderRadius: BorderRadius.all(Radius.circular(7))),
                       child: TextField(
                         controller: gstamount,
                         readOnly: true,
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-//                            icon:
-                            suffixIcon: Icon(Icons.attach_money),
-                            hintText: 'Please enter your amount'),
-                        style: TextStyle(
-                            color: Color(0xFF4E4E4E),
+                        decoration: InputDecoration.collapsed(
+                        hintStyle: TextStyle(
+                            color: Colors.white,
                             fontFamily: 'Google',
-                            fontSize: 21,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w400),
+                            hintText: 'Amount'),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Google',
+                            fontSize: 17,
                             fontWeight: FontWeight.w400),
                       ),
                     )),
@@ -61,83 +72,114 @@ class _GSTCalcState extends State<GSTCalc> {
             ),
           ),
         ),
+        Padding(padding: const EdgeInsets.all(5)),
         Container(
-          color: Colors.white,
-          child: Padding(
+//          color: Colors.white,
+          child: Container(
             padding: const EdgeInsets.only(left: 14),
-            child: SizedBox(
-              height: 70,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 320,
-                    child: DropdownButton(
-                      onChanged: (text) {},
-                      isExpanded: true,
-
-                      icon: Icon(Icons.keyboard_arrow_down),
-//                      underline:,
-                      elevation: 1,
-                      value: rate1,
-                      items: <String>['5%', '12%', '18%', '28%']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: TextStyle(
-                                color: Color(0xFF4E4E4E),
-                                fontFamily: 'Google',
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        );
-                      }).toList(),
+            width: 330,
+            height: 55,
+            decoration: BoxDecoration(
+                color: Color(0xFF720D5D),
+                borderRadius: BorderRadius.all(Radius.circular(7))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 300,
+                  child: DropdownButton(
+                    onChanged: (text) {},
+                    isExpanded: true,
+                    icon: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Colors.white,
                     ),
+                    underline: Container(),
+                    elevation: 1,
+                    dropdownColor: Color(0xFF3C174D),
+                    value: rate1,
+//                    isDense: true,
+                    items: <String>['5%', '12%', '18%', '28%']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Google',
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
+        Padding(padding: const EdgeInsets.all(5)),
         Container(
-          color: Colors.white,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
                   width: 300,
                   height: 60,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      new Radio<int>(
-                          activeColor: Colors.brown,
-                          value: 0,
-                          groupValue: radioValue,
-                          onChanged: handleRadioChange),
-                      new Text(
-                        "Exclusive",
-                        style: TextStyle(
-                            color: Color(0xFF4E4E4E),
+                      ChoiceChip(
+                        label: Text('Exclusive'),
+                        avatar: Icon(
+                          LineIcons.check_circle,
+                          color: Colors.white,
+                        ),
+                        pressElevation: 0,
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        backgroundColor: Color(0xFF720D5D),
+                        padding: const EdgeInsets.all(12),
+                        labelStyle: TextStyle(
+                            color: Colors.white,
                             fontFamily: 'Google',
-                            fontSize: 18,
+                            fontSize: 17,
                             fontWeight: FontWeight.w400),
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Color(0xFF720D5D)),
+                            borderRadius: BorderRadius.all(Radius.circular(7))),
+                        selected: selectValue == 0,
+                        onSelected: (value) {
+                          setState(() {
+                            selectValue = value ? 0 : -1;
+                          });
+                        },
                       ),
-                      new Radio<int>(
-                          activeColor: Colors.red,
-                          value: 1,
-                          groupValue: radioValue,
-                          onChanged: handleRadioChange),
-                      new Text(
-                        "Inclusive",
-                        style: TextStyle(
-                            color: Color(0xFF4E4E4E),
+                      Padding(padding: const EdgeInsets.all(5)),
+                      ChoiceChip(
+                        avatar: Icon(
+                          LineIcons.check_circle,
+                          color: Colors.white,
+                        ),
+                        shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Color(0xFF720D5D)),
+                            borderRadius: BorderRadius.all(Radius.circular(7))),
+                        label: Text('Inclusive'),
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        backgroundColor: Color(0xFF720D5D),
+                        padding: const EdgeInsets.all(12),
+                        labelStyle: TextStyle(
+                            color: Colors.white,
                             fontFamily: 'Google',
-                            fontSize: 18,
+                            fontSize: 17,
                             fontWeight: FontWeight.w400),
-                      ),
+                        selected: selectValue == 1,
+                        onSelected: (value) {
+                          setState(() {
+                            selectValue = value ? 1 : -1;
+                          });
+                        },
+                      )
                     ],
                   )),
             ],
@@ -174,10 +216,11 @@ class _GSTCalcState extends State<GSTCalc> {
         }
         gstamount.text = newDisplayString;
       });
-    } else {
+    } else if(buttonText == Calculations.EQUAL) {
+      CalculationLogic.calculateGST('100', '5', false);
+    }else{
       return setState(() {
         gstamount.text += "$buttonText";
-//        debugPrint('$displayString1');
       });
     }
   }

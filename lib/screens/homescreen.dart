@@ -40,9 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
               IconButton(
                 icon: Icon(LineIcons.history),
                 onPressed: () {
-                  var router = MaterialPageRoute(
+                  var router1 = MaterialPageRoute(
                       builder: (BuildContext context) => CalcHistory());
-                  Navigator.of(context).push(router);
+                  Navigator.of(context).push(router1);
                 },
               )
             ],

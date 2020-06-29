@@ -1,3 +1,4 @@
+import 'package:calculatorapp/utils/calculationlogic.dart';
 import 'package:flutter/material.dart';
 
 typedef void CalculatorButtonTapCallback({String buttonText});
@@ -18,30 +19,38 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String text1 = '';
+    if(text == Calculations.MULTIPLY){
+      text1 = '×';
+    }else if(text == Calculations.DIVIDE){
+      text1 = '÷';
+    }else{
+      text1 = text;
+    }
     if (isOperation) {
       return Container(
           child: FloatingActionButton(
         onPressed: () => onTap(buttonText: text),
         child: Text(
-          text,
+          text1,
           style: TextStyle(
-            fontSize: 21,
-            fontWeight: FontWeight.w600,
+            fontSize: 22,
+            fontWeight: FontWeight.w400,
             color: Colors.white,
             fontFamily: 'Google',
           ),
         ),
         elevation: 0,
-        backgroundColor: Colors.white12,
+        backgroundColor: Color(0xFF7E8A9A),
         splashColor: Colors.blueGrey[100],
       ));
     } else if (isClear) {
       return Container(
         child: FloatingActionButton(
-          onPressed: () => onTap(buttonText: text),
+          onPressed: () => onTap(buttonText: 'C'),
           child: Icon(
             Icons.backspace,
-            color: Color(0xFFAEAEAE),
+            color: Colors.white,
             size: 24,
           ),
           elevation: 0,
@@ -52,7 +61,7 @@ class CustomButton extends StatelessWidget {
     } else if (isEqual) {
       return Container(
         child: FloatingActionButton(
-          onPressed: () => onTap(buttonText: 'C'),
+          onPressed: () => onTap(buttonText: text),
           child: Text(
             text,
             style: TextStyle(

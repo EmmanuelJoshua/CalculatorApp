@@ -1,3 +1,4 @@
+import 'package:calculatorapp/utils/calculationlogic.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +49,7 @@ class CustomButton2 extends StatelessWidget {
     else
       return Container(
         child: FloatingActionButton(
-          onPressed: () => onTap(buttonText: 'Equal'),
+          onPressed: () => onTap(buttonText: Calculations.EQUAL),
           child: Icon(
             Icons.check,
             color: Color(0xFF4E4E4E),

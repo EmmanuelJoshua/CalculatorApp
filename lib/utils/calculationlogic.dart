@@ -24,7 +24,6 @@ class Calculations {
 }
 
 class CalculationLogic {
-
   static addExpression(String ex) async {
     HistoryModel historyModel = HistoryModel(expression: ex);
     await DatabaseHelper.dbhelp.saveExpression(historyModel);
@@ -45,7 +44,6 @@ class CalculationLogic {
         addExpression(express);
       }
       result = res;
-
     } else if (text.contains(Calculations.PERCENT)) {
       numbersToAdd = text.split(Calculations.PERCENT);
       a = double.parse(numbersToAdd[0]);
@@ -104,5 +102,34 @@ class CalculationLogic {
     }
 
     return false;
+  }
+
+  static String calculateTip(String price, String percent, String noPeople) {
+    int price1 = int.parse(price);
+    int percent1 = int.parse(percent);
+    int noPeople1 = int.parse(noPeople);
+
+    double percentage = (100 + percent1) / 100;
+    double tip = (percentage * price1) / noPeople1;
+    String tips = tip.toStringAsFixed(2);
+    return tips;
+  }
+
+  static void calculateGST(String price, String rate, bool gstInclusive){
+    int price1 = int.parse(price);
+    int rate1 = int.parse(rate);
+    double netprice;
+    String gst;
+    if(gstInclusive){
+      double gstamount = price1 - (price1*(100/(100 + rate1)));
+      netprice = price1 - gstamount;
+      gst = netprice.toStringAsFixed(2);
+
+    }else{
+      double gstamount = (price1*rate1)/100;
+      netprice = price1 + gstamount;
+      gst = netprice.toStringAsFixed(2);
+    }
+    print(gst);
   }
 }

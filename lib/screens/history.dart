@@ -108,7 +108,7 @@ class _CalcHistoryState extends State<CalcHistory> {
               size: 21,
             ),
             onPressed: () {
-              Navigator.of(context).pop();
+//              Navigator.of(context).pop();
             },
           ),
           title: SizedBox(
