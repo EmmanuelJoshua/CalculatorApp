@@ -132,4 +132,12 @@ class CalculationLogic {
     }
     print(gst);
   }
+
+  static String convertCurrency(String rate, String amount){
+    double rate1 = double.parse(rate);
+    double amount1 = double.parse(amount);
+    double output1 = rate1 * amount1;
+    String output2 = output1.toStringAsFixed(2);
+    return output2;
+  }
 }

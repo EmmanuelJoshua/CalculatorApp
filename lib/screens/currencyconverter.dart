@@ -1,3 +1,7 @@
+import 'package:calculatorapp/models/currencyrates.dart';
+import 'package:calculatorapp/utils/calculationlogic.dart';
+import 'package:calculatorapp/utils/constants.dart';
+import 'package:calculatorapp/utils/networkutil.dart';
 import 'package:calculatorapp/widgets/buttongrid2.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
@@ -10,11 +14,17 @@ class CurrencyConverter extends StatefulWidget {
 class _CurrencyConverterState extends State<CurrencyConverter> {
   String displayString1 = '0.00';
   String displayString2 = '0.00';
-  String rate1 = 'USD';
+  String currentSelection1 = 'USD';
+  String currentSelection2 = 'EUR';
+  var currencies = countryNameMap.keys.toList();
+  Future<Currency> customerData;
+  Currency currencyData;
 
-  @override
-  void initState() {
-    super.initState();
+  void loadRates(String country) async{
+    currencyData = await getRate(country);
+    setState(() {
+      displayString2 =CalculationLogic.convertCurrency(currencyData.rates[currentSelection2].toString(), displayString1) ;
+    });
   }
 
   @override
@@ -35,13 +45,17 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: DropdownButton(
-                          onChanged: (text) {},
+                          onChanged: (newSelection) {
+                            setState(() {
+                               currentSelection1 = newSelection;
+                            });
+                          },
                           icon: Icon(Icons.keyboard_arrow_down),
                           underline: Container(),
                           elevation: 1,
-                          value: rate1,
-                          items: <String>['USD', 'CAD']
-                              .map<DropdownMenuItem<String>>((String value) {
+                          dropdownColor: Color(0xFF3C174D),
+                          value: currentSelection1,
+                          items: currencies.map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(
@@ -82,16 +96,20 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: DropdownButton(
-                          onChanged: (text) {},
+                          onChanged: (newSelection) {
+                            setState(() {
+                              currentSelection2 = newSelection;
+                            });
+                          },
                           icon: Icon(
                             Icons.keyboard_arrow_down,
                             color: Colors.white,
                           ),
                           underline: Container(),
-                          value: rate1,
+                          value: currentSelection2,
                           elevation: 1,
-                          dropdownColor: Color(0xFF4E4E4E),
-                          items: <String>['USD', 'CAD']
+                          dropdownColor: Color(0xFF3C174D),
+                          items: currencies
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -175,7 +193,8 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   void _onPressed({String buttonText}) {
     if (displayString1 == '0.00') {
       displayString1 = '';
-    } else if (buttonText == 'C') {
+    }
+    if (buttonText == 'C') {
       return setState(() {
         String newDisplayString = displayString1;
         if (displayString1.length == 0) {
@@ -186,9 +205,9 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
         }
         displayString1 = newDisplayString;
       });
-    } else if (buttonText == 'Equal') {
+    } else if (buttonText == '=') {
       return setState(() {
-        displayString2 = displayString1;
+        loadRates(currentSelection1);
       });
     } else {
       return setState(() {

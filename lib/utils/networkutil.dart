@@ -8,7 +8,7 @@ Future<Currency> getRate(String base) async {
   final Response response = await get(URL_LATEST_BASE+base);
 
   if (response.statusCode == 200) {
-    return json.decode(response.body);
+    return Currency.fromJson(json.decode(response.body));
   } else {
     throw Exception('Failed to load customer data');
   }
