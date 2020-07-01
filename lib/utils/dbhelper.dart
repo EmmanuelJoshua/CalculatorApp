@@ -72,7 +72,10 @@ class DatabaseHelper{
 
   Future<int> updateExpression(int id, String notes) async {
     var dbClient = await db;
-    return await dbClient.rawUpdate('UPDATE $tableExpression SET notes = ? WHERE id = ?', [notes, id]);
+    String notes2;
+    if(notes == '') notes2 = 'No notes yet';
+      else notes2 = notes;
+    return await dbClient.rawUpdate('UPDATE $tableExpression SET notes = ? WHERE id = ?', [notes2, id]);
   }
 
   Future<int> deleteExpression(int id) async {

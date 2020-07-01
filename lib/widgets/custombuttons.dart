@@ -30,6 +30,7 @@ class CustomButton extends StatelessWidget {
     if (isOperation) {
       return Container(
           child: FloatingActionButton(
+            heroTag: null,
         onPressed: () => onTap(buttonText: text),
         child: Text(
           text1,
@@ -47,6 +48,7 @@ class CustomButton extends StatelessWidget {
     } else if (isClear) {
       return Container(
         child: FloatingActionButton(
+          heroTag: null,
           onPressed: () => onTap(buttonText: 'C'),
           child: Icon(
             Icons.backspace,
@@ -61,6 +63,7 @@ class CustomButton extends StatelessWidget {
     } else if (isEqual) {
       return Container(
         child: FloatingActionButton(
+          heroTag: null,
           onPressed: () => onTap(buttonText: text),
           child: Text(
             text,
@@ -78,6 +81,7 @@ class CustomButton extends StatelessWidget {
     } else {
       return Container(
           child: FloatingActionButton(
+            heroTag: null,
         onPressed: () => onTap(buttonText: text),
         child: Text(
           text,

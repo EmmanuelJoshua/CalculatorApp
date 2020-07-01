@@ -20,18 +20,19 @@ class _TipCalculatorState extends State<TipCalculator> {
     noOfPeople
   ];
 
-  String mainBill = '';
-  String mainTip = '';
+  List<String> tips;
+  int amountFocused = 0;
 
-  showCustomDialog(double bill) {
-    double price2 = double.parse(textfieldOptions.elementAt(0).text);
-    mainTip = (bill - price2).toString();
+  showCustomDialog(List<String> billList) {
+    String totalBill = billList[0];
+    String totalTip = billList[1];
+    String tipPerPerson = billList[2];
     showDialog(
         context: context,
         builder: (context) {
           return Dialog(
-              shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
               backgroundColor: Color(0xFF270F33),
               elevation: 0,
               child: Container(
@@ -41,30 +42,47 @@ class _TipCalculatorState extends State<TipCalculator> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(LineIcons.check_circle, size: 80, color: Colors.white,),
+                        Icon(
+                          LineIcons.check_circle,
+                          size: 80,
+                          color: Colors.white,
+                        ),
                         Padding(padding: const EdgeInsets.all(5)),
-                        Text('Tip: \$$mainTip', style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Google',
-                            fontSize: 17,
-                            fontWeight: FontWeight.w400),),
+                        Text(
+                          'Tips per person: \$$tipPerPerson',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Google',
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400),
+                        ),
                         Padding(padding: const EdgeInsets.all(5)),
-                        Text('Your total bill: \$$mainBill', style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Google',
-                            fontSize: 17,
-                            fontWeight: FontWeight.w400),),
-
+                        Text(
+                          'Total tip: \$$totalTip',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Google',
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        Padding(padding: const EdgeInsets.all(5)),
+                        Text(
+                          'Your total bill: \$$totalBill',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Google',
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400),
+                        ),
                       ],
                     ),
-                  )
-              )
-              );
+                  )));
         });
   }
 
   @override
   Widget build(BuildContext context) {
+    var deviceSize = MediaQuery.of(context).size;
     return Container(
         padding: const EdgeInsets.only(top: 5),
         decoration: BoxDecoration(
@@ -73,6 +91,7 @@ class _TipCalculatorState extends State<TipCalculator> {
         child: Column(children: [
           Container(
             child: SizedBox(
+              width: deviceSize.width,
               height: 70,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -80,30 +99,119 @@ class _TipCalculatorState extends State<TipCalculator> {
                   Padding(
                       padding: const EdgeInsets.only(left: 14),
                       child: Container(
-                        width: 330,
+                          width: deviceSize.width - 30,
+                          height: 55,
+                          padding: const EdgeInsets.only(left: 12),
+                          decoration: BoxDecoration(
+                              color: Color(0xFF720D5D),
+                              border: focusedIndex == 0
+                                  ? Border.all(
+                                      width: 1,
+                                      color: Colors.white,
+                                    )
+                                  : Border.all(
+                                      width: 1,
+                                      color: Color(0xFF720D5D),
+                                    ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7))),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: amount,
+                                  readOnly: true,
+                                  onTap: () {
+                                    setState(() {
+                                      focusedIndex = 0;
+                                    });
+                                  },
+//                                  showCursor: true,
+                                  decoration: InputDecoration.collapsed(
+                                      hintStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Google',
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w400),
+                                      hintText: 'Amount'),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Google',
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: Icon(
+                                  LineIcons.money,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ))),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            child: SizedBox(
+              width: deviceSize.width,
+              height: 70,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.only(left: 14),
+                      child: Container(
+                        width: deviceSize.width - 30,
                         height: 55,
-                        padding: const EdgeInsets.only(top: 15, left: 12),
+                        padding: const EdgeInsets.only(left: 12),
                         decoration: BoxDecoration(
                             color: Color(0xFF720D5D),
+                            border: focusedIndex == 1
+                                ? Border.all(
+                                    width: 1,
+                                    color: Colors.white,
+                                  )
+                                : Border.all(
+                                    width: 1,
+                                    color: Color(0xFF720D5D),
+                                  ),
                             borderRadius: BorderRadius.all(Radius.circular(7))),
-                        child: TextField(
-                          controller: amount,
-                          readOnly: true,
-                          onTap: () {
-                            focusedIndex = 0;
-                          },
-                          decoration: InputDecoration.collapsed(
-                              hintStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Google',
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w400),
-                              hintText: 'Amount'),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Google',
-                              fontSize: 17,
-                              fontWeight: FontWeight.w400),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                onTap: () {
+                                  setState(() {
+                                    focusedIndex = 1;
+                                  });
+                                },
+                                controller: tipPercent,
+                                readOnly: true,
+                                decoration: InputDecoration.collapsed(
+                                    hintStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Google',
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w400),
+                                    hintText: 'Tips in %'),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Google',
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Icon(
+                                LineIcons.dollar,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
                         ),
                       )),
                 ],
@@ -112,6 +220,7 @@ class _TipCalculatorState extends State<TipCalculator> {
           ),
           Container(
             child: SizedBox(
+              width: deviceSize.width,
               height: 70,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -119,69 +228,54 @@ class _TipCalculatorState extends State<TipCalculator> {
                   Padding(
                       padding: const EdgeInsets.only(left: 14),
                       child: Container(
-                        width: 330,
+                        width: deviceSize.width - 30,
                         height: 55,
-                        padding: const EdgeInsets.only(top: 15, left: 12),
+                        padding: const EdgeInsets.only(left: 12),
                         decoration: BoxDecoration(
                             color: Color(0xFF720D5D),
+                            border: focusedIndex == 2
+                                ? Border.all(
+                                    width: 1,
+                                    color: Colors.white,
+                                  )
+                                : Border.all(
+                                    width: 1,
+                                    color: Color(0xFF720D5D),
+                                  ),
                             borderRadius: BorderRadius.all(Radius.circular(7))),
-                        child: TextField(
-                          onTap: () {
-                            focusedIndex = 1;
-                          },
-                          controller: tipPercent,
-                          readOnly: true,
-                          decoration: InputDecoration.collapsed(
-                              hintStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Google',
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w400),
-                              hintText: 'Tip'),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Google',
-                              fontSize: 17,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      )),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            child: SizedBox(
-              height: 70,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.only(left: 14),
-                      child: Container(
-                        width: 330,
-                        height: 55,
-                        padding: const EdgeInsets.only(top: 15, left: 12),
-                        decoration: BoxDecoration(
-                            color: Color(0xFF720D5D),
-                            borderRadius: BorderRadius.all(Radius.circular(7))),
-                        child: TextField(
-                          controller: noOfPeople,
-                          readOnly: true,
-                          onTap: () {
-                            focusedIndex = 2;
-                          },
-                          decoration: InputDecoration.collapsed(
-                              hintStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Google',
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w400),
-                              hintText: 'No of people'),
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Google',
-                              fontSize: 17,
-                              fontWeight: FontWeight.w400),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: noOfPeople,
+                                readOnly: true,
+                                onTap: () {
+                                  setState(() {
+                                    focusedIndex = 2;
+                                  });
+                                },
+                                decoration: InputDecoration.collapsed(
+                                    hintStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Google',
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w400),
+                                    hintText: 'No of people'),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Google',
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Icon(
+                                LineIcons.user,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
                         ),
                       )),
                 ],
@@ -190,12 +284,13 @@ class _TipCalculatorState extends State<TipCalculator> {
           ),
           Expanded(
               child: Container(
-            width: double.infinity,
+            width: deviceSize.width,
+            height: deviceSize.height,
             color: Color(0xFF270F33),
             child: ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(6),
                 ),
                 ButtonGrid2(
                   onTap: _onPressed,
@@ -239,12 +334,11 @@ class _TipCalculatorState extends State<TipCalculator> {
         }
       });
     } else if (buttonText == Calculations.EQUAL) {
-      mainBill = CalculationLogic.calculateTip(
+      tips = CalculationLogic.calculateTip(
           textfieldOptions.elementAt(0).text,
           textfieldOptions.elementAt(1).text,
           textfieldOptions.elementAt(2).text);
-      double bill = double.parse(mainBill);
-      showCustomDialog(bill);
+      showCustomDialog(tips);
     } else {
       return setState(() {
         if (focusedIndex == 0)

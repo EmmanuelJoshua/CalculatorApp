@@ -2,6 +2,7 @@ import 'package:calculatorapp/models/historymodel.dart';
 import 'package:calculatorapp/utils/dbhelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 
 class CalcHistory extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class _CalcHistoryState extends State<CalcHistory> {
   showMatDialog(int id) async {
     HistoryModel snapshot = await DatabaseHelper.dbhelp.getExpression(id);
     TextEditingController editingController2 =
-        new TextEditingController(text: snapshot.notes);
+        new TextEditingController(text: snapshot.notes == 'No notes yet' ? '':snapshot.notes);
     showDialog(
         context: context,
         builder: (context) {
@@ -40,34 +41,65 @@ class _CalcHistoryState extends State<CalcHistory> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Container(
-              height: 210,
+              height: 200,
               width: 400,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller:
-                          TextEditingController(text: snapshot.expression),
-                      readOnly: true,
-                      decoration: InputDecoration(border: OutlineInputBorder()),
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Color(0xFF270F33),
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            topLeft: Radius.circular(10))),
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    height: 60,
+                    child: Text(
+                      snapshot.expression,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Google',
+                          fontSize: 17,
+                          fontWeight: FontWeight.w400),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(3),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(3),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                          primaryColor: Color(0xFF562071),
+                        platform: TargetPlatform.iOS
+                      ),
+                      child: SizedBox(
+                        height: 50,
+                        child: TextField(
+                          autofocus: true,
+                          controller: editingController2,
+                          cursorColor: Color(0xFF55206F),
+                          style: TextStyle(
+                              color: Color(0xFF270F33),
+                              fontFamily: 'Google',
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Enter notes',
+                            hintStyle: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Google',
+                                fontSize: 17,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ),
                     ),
-                    TextField(
-                      autofocus: true,
-                      controller: editingController2,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Enter notes'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(3),
-                    ),
-                    SizedBox(
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10, left: 10),
+                    child: SizedBox(
                       width: 320,
                       height: 50,
                       child: RaisedButton(
@@ -79,19 +111,28 @@ class _CalcHistoryState extends State<CalcHistory> {
                           reloadExpressions();
                           Navigator.of(context).pop();
                         },
-                        child: Text(
-                          'Save',
-                          style: TextStyle(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Save',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Google',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            Icon(
+                              LineIcons.check_circle,
                               color: Colors.white,
-                              fontFamily: 'Google',
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400),
+                            ),
+                          ],
                         ),
-                        color: const Color(0xFF4E4E4E),
+                        color: const Color(0xFF270F33),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
             ),
           );
@@ -104,11 +145,11 @@ class _CalcHistoryState extends State<CalcHistory> {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(
-              Icons.arrow_back_ios,
+              LineIcons.arrow_left,
               size: 21,
             ),
             onPressed: () {
-//              Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
           ),
           title: SizedBox(
@@ -119,6 +160,7 @@ class _CalcHistoryState extends State<CalcHistory> {
                   fontFamily: 'Google',
                   fontSize: 20,
                   fontWeight: FontWeight.w400),
+              cursorColor: Color(0xFFE6CDF1),
               decoration: InputDecoration.collapsed(
                 hintText: 'Search',
                 hintStyle: TextStyle(
@@ -128,16 +170,18 @@ class _CalcHistoryState extends State<CalcHistory> {
                     fontWeight: FontWeight.w400),
               ),
               onChanged: (text) {
-                setState(() {searchExpressions(text);
+                setState(() {
+                  searchExpressions(text);
                 });
               },
             ),
           ),
-          backgroundColor: Color(0xFF4E4E4E),
+          backgroundColor: Color(0xFF270F33),
         ),
         body: Stack(
           children: [
             Container(
+              padding: const EdgeInsets.only(top: 10),
               color: Colors.transparent,
               child: historyBuilder(),
             ),
@@ -157,12 +201,16 @@ class _CalcHistoryState extends State<CalcHistory> {
             children: [
               Icon(
                 Icons.do_not_disturb,
-                size: 50,
-                color: Color(0xFF4E4E4E),
+                size: 70,
+                color: Color(0xFF270F33),
               ),
+              Padding(padding: const EdgeInsets.all(5)),
               Text(
                 'No history',
-                style: TextStyle(fontSize: 19, color: Color(0xFF4E4E4E)),
+                style: TextStyle(
+                  fontSize: 19,
+                  color: Color(0xFF270F33),
+                ),
               ),
             ],
           ));
@@ -174,7 +222,7 @@ class _CalcHistoryState extends State<CalcHistory> {
               return Dismissible(
                 key: UniqueKey(),
                 background: Container(
-                  color: Color(0xFF4E4E4E),
+                  color: Color(0xFF270F33),
                   child: Row(
                     children: [
                       Padding(padding: const EdgeInsets.all(5)),
@@ -186,7 +234,7 @@ class _CalcHistoryState extends State<CalcHistory> {
                   ),
                 ),
                 secondaryBackground: Container(
-                  color: Color(0xFF4E4E4E),
+                  color: Color(0xFF270F33),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -223,8 +271,9 @@ class _CalcHistoryState extends State<CalcHistory> {
                   ),
                   trailing: IconButton(
                     icon: Icon(
-                      Icons.edit,
-                      size: 21,
+                      LineIcons.edit,
+                      size: 24,
+                      color: Color(0xFF270F33),
                     ),
                     onPressed: () {
                       showMatDialog(snapshot.data[index]['id']);

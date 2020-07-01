@@ -4,9 +4,9 @@ import 'package:http/http.dart';
 
 Future<Currency> getRate(String base) async {
   const String URL_LATEST_BASE = "https://api.exchangeratesapi.io/latest?base=";
-
   final Response response = await get(URL_LATEST_BASE+base);
 
+  if(response == null) throw new Exception('Response is null');
   if (response.statusCode == 200) {
     return Currency.fromJson(json.decode(response.body));
   } else {

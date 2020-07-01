@@ -21,7 +21,14 @@ class _HomeScreenState extends State<HomeScreen> {
     GSTCalc(),
     Calculator(),
     TipCalculator(),
-    Container(),
+//    Container(),
+  ];
+
+  static List<String> screenNames = <String>[
+    'Currency Converter',
+    'GST Calculator',
+    'Calculator',
+    'Tip Calculator'
   ];
 
   @override
@@ -29,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         appBar: AppBar(
             title: Text(
-              'Calculator',
+              screenNames[selectedIndex],
               style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Google',
@@ -94,10 +101,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: LineIcons.money,
                   text: 'Tips',
                 ),
-                GButton(
-                  icon: LineIcons.ticket,
-                  text: 'Invoice',
-                ),
+//                GButton(
+//                  icon: LineIcons.ticket,
+//                  text: 'Invoice',
+//                ),
               ],
             ),
           ),

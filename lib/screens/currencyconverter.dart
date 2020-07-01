@@ -20,17 +20,65 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   Future<Currency> customerData;
   Currency currencyData;
 
-  void loadRates(String country) async{
-    currencyData = await getRate(country);
+  void loadRates(String country) async {
+    try{
+      currencyData = await getRate(country);
+    }catch(e){
+      print('Exc');
+    }
     setState(() {
-      displayString2 =CalculationLogic.convertCurrency(currencyData.rates[currentSelection2].toString(), displayString1) ;
+      if (currencyData != null) {
+        displayString2 = CalculationLogic.convertCurrency(
+            currencyData.rates[currentSelection2].toString(), displayString1);
+      } else {
+        showErrorModal();
+        print('check your internet');
+      }
     });
+  }
+
+  showErrorModal(){
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              backgroundColor: Color(0xFF270F33),
+              elevation: 0,
+              child: Container(
+                  height: 210,
+                  width: 120,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          LineIcons.exclamation,
+                          size: 80,
+                          color: Colors.white,
+                        ),
+                        Padding(padding: const EdgeInsets.all(5)),
+                        Text(
+                          'No Internet Connection',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Google',
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        Padding(padding: const EdgeInsets.all(5)),
+
+                      ],
+                    ),
+                  )));
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 600),
+    var deviceSize = MediaQuery.of(context).size;
+    return Container(
       child: Stack(
         children: [
           Column(
@@ -47,7 +95,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                         child: DropdownButton(
                           onChanged: (newSelection) {
                             setState(() {
-                               currentSelection1 = newSelection;
+                              currentSelection1 = newSelection;
                             });
                           },
                           icon: Icon(Icons.keyboard_arrow_down),
@@ -55,7 +103,8 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                           elevation: 1,
                           dropdownColor: Color(0xFF3C174D),
                           value: currentSelection1,
-                          items: currencies.map<DropdownMenuItem<String>>((String value) {
+                          items: currencies
+                              .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(
@@ -142,7 +191,8 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
               ),
               Expanded(
                   child: Container(
-                width: double.infinity,
+                width: deviceSize.width,
+                height: deviceSize.height,
                 color: Color(0xFF270F33),
                 child: ListView(
                   children: [

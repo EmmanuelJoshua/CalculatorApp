@@ -104,33 +104,43 @@ class CalculationLogic {
     return false;
   }
 
-  static String calculateTip(String price, String percent, String noPeople) {
+  static List<String> calculateTip(String price, String percent, String noPeople) {
     int price1 = int.parse(price);
     int percent1 = int.parse(percent);
     int noPeople1 = int.parse(noPeople);
 
     double percentage = (100 + percent1) / 100;
-    double tip = (percentage * price1) / noPeople1;
-    String tips = tip.toStringAsFixed(2);
-    return tips;
+    double tip = (percentage * price1) - price1;
+    double tips = double.parse(tip.toStringAsFixed(2)) / noPeople1;
+    double totalTip = tips * noPeople1;
+    double totalBill = price1 + totalTip;
+    List<String> allAmounts = [
+      totalBill.toString(),
+      totalTip.toString(),
+      tips.toStringAsFixed(2)
+    ];
+
+    return allAmounts;
   }
 
-  static void calculateGST(String price, String rate, bool gstInclusive){
+  static List<String> calculateGST(String price, String rate, bool gstInclusive){
     int price1 = int.parse(price);
     int rate1 = int.parse(rate);
-    double netprice;
-    String gst;
-    if(gstInclusive){
-      double gstamount = price1 - (price1*(100/(100 + rate1)));
-      netprice = price1 - gstamount;
-      gst = netprice.toStringAsFixed(2);
+    double pregst;
+    double totalgst;
 
+    if(gstInclusive){
+      totalgst = price1 - (price1*(100/(100 + rate1)));
+      pregst = price1 - totalgst;
     }else{
-      double gstamount = (price1*rate1)/100;
-      netprice = price1 + gstamount;
-      gst = netprice.toStringAsFixed(2);
+      totalgst = (price1*rate1)/100;
+      pregst = price1 + totalgst;
     }
-    print(gst);
+    List<String> allAmounts = [
+      pregst.toStringAsFixed(2),
+      totalgst.toStringAsFixed(2)
+    ];
+    return allAmounts;
   }
 
   static String convertCurrency(String rate, String amount){
