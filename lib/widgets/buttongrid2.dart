@@ -7,65 +7,70 @@ class ButtonGrid2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return Container(
-          height: 370,
-          child: GridView.count(
-            crossAxisCount: 3,
-          childAspectRatio: 1.08,
-          padding: const EdgeInsets.only(left: 35, right: 35),
-          mainAxisSpacing: 9.5,
-          crossAxisSpacing: 13,
-            children: <Widget>[
-              CustomButton2(
-                text: '1',
-                onTap: onTap,
+    var deviceSize = MediaQuery.of(context).size;
+     return Column(
+       children: [
+         Container(
+              height: deviceSize.height,
+              child: GridView.count(
+                crossAxisCount: 3,
+              childAspectRatio: 1.08,
+              padding: const EdgeInsets.only(left: 35, right: 35),
+              mainAxisSpacing: 9.5,
+              crossAxisSpacing: 13,
+                children: <Widget>[
+                  CustomButton2(
+                    text: '1',
+                    onTap: onTap,
+                  ),
+                  CustomButton2(
+                    text: '2',
+                    onTap: onTap,
+                  ),
+                  CustomButton2(
+                    text: '3',
+                    onTap: onTap,
+                  ),
+                  CustomButton2(
+                    text: '4',
+                    onTap: onTap,
+                  ),
+                  CustomButton2(
+                    text: '5',
+                    onTap: onTap,
+                  ),
+                  CustomButton2(
+                    text: '6',
+                    onTap: onTap,
+                  ),
+                  CustomButton2(
+                    text: '7',
+                    onTap: onTap,
+                  ),
+                  CustomButton2(
+                    text: '8',
+                    onTap: onTap,
+                  ),
+                  CustomButton2(
+                    text: '9',
+                    onTap: onTap,
+                  ),
+                  CustomButton2(
+                    onTap: onTap,
+                    isClear: true,
+                  ),
+                  CustomButton2(
+                    text: '0',
+                    onTap: onTap,
+                  ),
+                  CustomButton2(
+                    onTap: onTap,
+                    isEqual: true,
+                  ),
+                ],
               ),
-              CustomButton2(
-                text: '2',
-                onTap: onTap,
-              ),
-              CustomButton2(
-                text: '3',
-                onTap: onTap,
-              ),
-              CustomButton2(
-                text: '4',
-                onTap: onTap,
-              ),
-              CustomButton2(
-                text: '5',
-                onTap: onTap,
-              ),
-              CustomButton2(
-                text: '6',
-                onTap: onTap,
-              ),
-              CustomButton2(
-                text: '7',
-                onTap: onTap,
-              ),
-              CustomButton2(
-                text: '8',
-                onTap: onTap,
-              ),
-              CustomButton2(
-                text: '9',
-                onTap: onTap,
-              ),
-              CustomButton2(
-                onTap: onTap,
-                isClear: true,
-              ),
-              CustomButton2(
-                text: '0',
-                onTap: onTap,
-              ),
-              CustomButton2(
-                onTap: onTap,
-                isEqual: true,
-              ),
-            ],
-          ),
-    );
+    ),
+       ],
+     );
   }
 }

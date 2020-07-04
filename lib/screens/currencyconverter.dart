@@ -2,6 +2,8 @@ import 'package:calculatorapp/models/currencyrates.dart';
 import 'package:calculatorapp/utils/calculationlogic.dart';
 import 'package:calculatorapp/utils/constants.dart';
 import 'package:calculatorapp/utils/networkutil.dart';
+import 'package:calculatorapp/utils/randomutils.dart';
+import 'package:calculatorapp/utils/repository.dart';
 import 'package:calculatorapp/widgets/buttongrid2.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
@@ -19,11 +21,16 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   var currencies = countryNameMap.keys.toList();
   Future<Currency> customerData;
   Currency currencyData;
+  TextEditingControllerWorkaround valueController =
+      new TextEditingControllerWorkaround();
+
+  @protected
+  Repository repository = new Repository();
 
   void loadRates(String country) async {
-    try{
-      currencyData = await getRate(country);
-    }catch(e){
+    try {
+      currencyData = await repository.getExchangeRate(country);
+    } catch (e) {
       print('Exc');
     }
     setState(() {
@@ -37,7 +44,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
     });
   }
 
-  showErrorModal(){
+  showErrorModal() {
     showDialog(
         context: context,
         builder: (context) {
@@ -68,7 +75,6 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                               fontWeight: FontWeight.w400),
                         ),
                         Padding(padding: const EdgeInsets.all(5)),
-
                       ],
                     ),
                   )));
@@ -78,6 +84,8 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
+    valueController.text = "$displayString1";
+    double marginTop = deviceSize.height / 8 - 18;
     return Container(
       child: Stack(
         children: [
@@ -92,6 +100,32 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
+                        child: Container(
+                          width: 200,
+                          child: TextField(
+                            controller: valueController,
+//                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                                color: Color(0xFF270F33),
+                                fontFamily: 'Google',
+                                fontSize: 40,
+                                fontWeight: FontWeight.w400),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              prefixText:
+                                  currencySymbol(currentSelection1) + ' ',
+                              prefixStyle: TextStyle(
+                                  color: Color(0xFF270F33).withOpacity(0.9),
+                                  fontFamily: 'Google',
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                            readOnly: true,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
                         child: DropdownButton(
                           onChanged: (newSelection) {
                             setState(() {
@@ -117,17 +151,6 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                               ),
                             );
                           }).toList(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Text(
-                          displayString1,
-                          style: TextStyle(
-                              color: Color(0xFF270F33),
-                              fontFamily: 'Google',
-                              fontSize: 40,
-                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     ],
@@ -176,14 +199,31 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 10),
-                        child: Text(
-                          displayString2,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Google',
-                              fontSize: 40,
-                              fontWeight: FontWeight.w400),
+                        child: RichText(
+                          text: TextSpan(text: '', children: [
+                            new TextSpan(children: [
+                              TextSpan(
+                                text: currencySymbol(currentSelection2),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Google',
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              TextSpan(
+                                  text: ' ' + displayString2,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Google',
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.w400)),
+                            ])
+                          ]),
                         ),
+//                        child: Text(
+//                          currencySymbol(currentSelection2)+' '+ displayString2,
+
+//                        ),
                       ),
                     ],
                   ),
@@ -196,7 +236,6 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                 color: Color(0xFF270F33),
                 child: ListView(
                   children: [
-//                    Divider(color: Colors.white,),
                     ButtonGrid2(
                       onTap: _onPressed,
                     )
@@ -206,9 +245,8 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
             ],
           ),
           Container(
-//            width: 100,
-            margin: const EdgeInsets.only(bottom: 390),
-            alignment: Alignment.center,
+            margin: EdgeInsets.only(top: marginTop),
+            alignment: Alignment.topCenter,
             child: Container(
               width: 65,
               height: 65,
@@ -262,7 +300,6 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
     } else {
       return setState(() {
         displayString1 += "$buttonText";
-        debugPrint('$displayString1');
       });
     }
   }

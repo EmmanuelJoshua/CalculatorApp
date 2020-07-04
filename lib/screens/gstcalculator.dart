@@ -15,6 +15,7 @@ class _GSTCalcState extends State<GSTCalc> {
   int selectValue = 0;
   List<String> gstAmounts;
   bool gstInclusive = false;
+  int focusedIndex = 0;
 
   void handleChipChange(int value) {
     setState(() {
@@ -100,6 +101,15 @@ class _GSTCalcState extends State<GSTCalc> {
                       padding: const EdgeInsets.only(left: 12),
                       decoration: BoxDecoration(
                           color: Color(0xFF720D5D),
+                          border: focusedIndex == 0
+                              ? Border.all(
+                                  width: 1,
+                                  color: Colors.white,
+                                )
+                              : Border.all(
+                                  width: 1,
+                                  color: Color(0xFF720D5D),
+                                ),
                           borderRadius: BorderRadius.all(Radius.circular(7))),
                       child: Row(
                         children: [
@@ -107,6 +117,9 @@ class _GSTCalcState extends State<GSTCalc> {
                             child: TextField(
                               controller: gstamount,
                               readOnly: true,
+                              onTap: () {
+                                focusedIndex = 0;
+                              },
                               decoration: InputDecoration.collapsed(
                                   hintStyle: TextStyle(
                                       color: Colors.white,
@@ -144,6 +157,15 @@ class _GSTCalcState extends State<GSTCalc> {
             height: 55,
             decoration: BoxDecoration(
                 color: Color(0xFF720D5D),
+                border: focusedIndex == 1
+                    ? Border.all(
+                        width: 1,
+                        color: Colors.white,
+                      )
+                    : Border.all(
+                        width: 1,
+                        color: Color(0xFF720D5D),
+                      ),
                 borderRadius: BorderRadius.all(Radius.circular(7))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -154,6 +176,11 @@ class _GSTCalcState extends State<GSTCalc> {
                     onChanged: (text) {
                       setState(() {
                         rate1 = text;
+                      });
+                    },
+                    onTap: () {
+                      setState(() {
+                        focusedIndex = 1;
                       });
                     },
                     isExpanded: true,
@@ -219,7 +246,8 @@ class _GSTCalcState extends State<GSTCalc> {
                               fontWeight: FontWeight.w400),
                           shape: RoundedRectangleBorder(
                               side: BorderSide(color: Color(0xFF720D5D)),
-                              borderRadius: BorderRadius.all(Radius.circular(7))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7))),
                           selected: selectValue == 0,
                           onSelected: (value) {
                             setState(() {
@@ -240,7 +268,8 @@ class _GSTCalcState extends State<GSTCalc> {
                           ),
                           shape: RoundedRectangleBorder(
                               side: BorderSide(color: Color(0xFF720D5D)),
-                              borderRadius: BorderRadius.all(Radius.circular(7))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7))),
                           label: Text('Inclusive'),
                           selectedColor: Colors.white,
                           clipBehavior: Clip.antiAliasWithSaveLayer,

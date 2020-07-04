@@ -33,49 +33,68 @@ class _TipCalculatorState extends State<TipCalculator> {
           return Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
-              backgroundColor: Color(0xFF270F33),
+//              backgroundColor: Color(0xFF270F33),
               elevation: 0,
               child: Container(
                   height: 210,
                   width: 150,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
+                  child: Stack(
+//                      alignment: Alignment.topCenter,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Color(0xFF270F33),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                topLeft: Radius.circular(10))),
+//                          alignment: Alignment.topCenter,
+                        width: double.infinity,
+                        height: 100,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, left: 20),
+                        child: Icon(
                           LineIcons.check_circle,
                           size: 80,
                           color: Colors.white,
                         ),
-                        Padding(padding: const EdgeInsets.all(5)),
-                        Text(
-                          'Tips per person: \$$tipPerPerson',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Google',
-                              fontSize: 17,
-                              fontWeight: FontWeight.w400),
+                      ),
+                      Positioned(
+                       bottom: 10,
+                        child: Column(
+                          children: [
+                            Text(
+                              'Tips per person: \$$tipPerPerson',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'Google',
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
                         ),
-                        Padding(padding: const EdgeInsets.all(5)),
-                        Text(
-                          'Total tip: \$$totalTip',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Google',
-                              fontSize: 17,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        Padding(padding: const EdgeInsets.all(5)),
-                        Text(
-                          'Your total bill: \$$totalBill',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Google',
-                              fontSize: 17,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ],
-                    ),
+                      )
+//                      Padding(padding: const EdgeInsets.all(5)),
+
+//                      Padding(padding: const EdgeInsets.all(5)),
+//                      Text(
+//                        'Total tip: \$$totalTip',
+//                        style: TextStyle(
+//                            color: Colors.white,
+//                            fontFamily: 'Google',
+//                            fontSize: 17,
+//                            fontWeight: FontWeight.w400),
+//                      ),
+//                      Padding(padding: const EdgeInsets.all(5)),
+//                      Text(
+//                        'Your total bill: \$$totalBill',
+//                        style: TextStyle(
+//                            color: Colors.white,
+//                            fontFamily: 'Google',
+//                            fontSize: 17,
+//                            fontWeight: FontWeight.w400),
+//                      ),
+                    ],
                   )));
         });
   }
