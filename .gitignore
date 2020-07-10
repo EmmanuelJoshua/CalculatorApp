@@ -73,3 +73,6 @@
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 .flutter-plugins-dependencies
 lib/generated_plugin_registrant.dart
+android/app/New/key.jks
+android/key.properties
+New/key.jks

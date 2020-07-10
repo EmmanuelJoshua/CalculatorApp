@@ -11,8 +11,9 @@ class ButtonGrid2 extends StatelessWidget {
      return Column(
        children: [
          Container(
-              height: deviceSize.height,
+           constraints: BoxConstraints(maxHeight: 355),
               child: GridView.count(
+                physics: NeverScrollableScrollPhysics(),
                 crossAxisCount: 3,
               childAspectRatio: 1.08,
               padding: const EdgeInsets.only(left: 35, right: 35),

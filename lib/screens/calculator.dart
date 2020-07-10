@@ -19,21 +19,28 @@ class _CalculatorState extends State<Calculator> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Color(0xFF270F33),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            new NumberDisplay(
-              displayString: displayString,
-              resultString: resultString,
-            ),
-            Padding(padding: const EdgeInsets.all(7)),
-            new ButtonGrid(
-              onTap: _onPressed,
-            )
-          ],
-        ));
+    var deviceSize = MediaQuery.of(context).size;
+    return SingleChildScrollView(
+//      physics: NeverScrollableScrollPhysics(),
+      child: Container(
+        width: deviceSize.width,
+          height: deviceSize.height - 100,
+          color: Color(0xFF270F33),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new NumberDisplay(
+                displayString: displayString,
+                resultString: resultString,
+              ),
+              Padding(padding: const EdgeInsets.all(2)),
+              new ButtonGrid(
+                onTap: _onPressed,
+              ),
+              Padding(padding: const EdgeInsets.all(3)),
+            ],
+          )),
+    );
   }
 
   void _onPressed({String buttonText}) {

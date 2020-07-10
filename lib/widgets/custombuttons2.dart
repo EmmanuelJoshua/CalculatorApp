@@ -8,7 +8,7 @@ class CustomButton2 extends StatelessWidget {
   CustomButton2(
       {this.text, this.onTap, this.isEqual: false, this.isClear: false});
 
-  final String text;
+  String text;
   final ConverterButtonTapCallback onTap;
   final bool isEqual;
   final bool isClear;
@@ -32,20 +32,28 @@ class CustomButton2 extends StatelessWidget {
       );
     else if (!isEqual)
       return Container(
-        child: FloatingActionButton(
-          heroTag: null,
-          onPressed: () => onTap(buttonText: text),
-          child: Text(
-            text,
-            style: TextStyle(
-                fontFamily: 'Google',
-                fontSize: 25,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFFAEAEAE)),
+        child: InkWell(
+          onLongPress: (){
+            if(text == '0')onTap(buttonText: Calculations.PERIOD);
+            else onTap(buttonText: text);
+          },
+          child: FloatingActionButton(
+            heroTag: null,
+            focusColor: Colors.blueGrey[100],
+            onPressed: () => onTap(buttonText: text),
+
+            child: Text(
+            text == '0' ? '0.' : text,
+              style: TextStyle(
+                  fontFamily: 'Google',
+                  fontSize: 25,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFFAEAEAE)),
+            ),
+            backgroundColor: Colors.white12,
+            elevation: 0,
+            splashColor: Colors.blueGrey[100],
           ),
-          backgroundColor: Colors.white12,
-          elevation: 0,
-          splashColor: Colors.blueGrey[100],
         ),
       );
     else

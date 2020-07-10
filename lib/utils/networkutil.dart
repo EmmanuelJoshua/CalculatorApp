@@ -8,7 +8,7 @@ Future<Currency> getRate(Client client, String base) async {
 
   if (response == null) throw new Exception('Response is null');
   if (response.statusCode < 200 || response.statusCode > 400) {
-    throw Exception(response.body);
+    throw Exception("test stuff"+response.body);
   } else {
     return Currency.fromJson(json.decode(response.body));
   }

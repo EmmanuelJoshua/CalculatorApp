@@ -9,8 +9,9 @@ class NumberDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Flexible(
-      flex: 2,
+//      flex: 1,
       child: Container(
+          padding: const EdgeInsets.only(top: 4),
         color: Color(0xFFFAFAFA),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,

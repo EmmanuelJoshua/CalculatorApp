@@ -1,5 +1,9 @@
+import 'dart:io' show Platform;
+import 'dart:ui';
+
 import 'package:calculatorapp/models/historymodel.dart';
 import 'package:calculatorapp/utils/dbhelper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:function_tree/function_tree.dart';
 
 class Calculations {
@@ -85,6 +89,11 @@ class CalculationLogic {
     }
 
     RegExp exp = new RegExp(r"\d\.");
+//    for(String operation in Calculations.OPERATIONS){
+//      if(calculatorString.contains(operation)){
+//        exp = new RegExp(r"[%].");
+//      }
+//    }
     Iterable<Match> matches = exp.allMatches(calculatorString);
     int maxMatches =
         CalculationLogic.includesOperation(calculatorString) ? 2 : 1;
@@ -105,15 +114,16 @@ class CalculationLogic {
   }
 
   static List<String> calculateTip(String price, String percent, String noPeople) {
-    int price1 = int.parse(price);
-    int percent1 = int.parse(percent);
-    int noPeople1 = int.parse(noPeople);
+    double price1 = double.parse(price);
+    double percent1 = double.parse(percent);
+    double noPeople1 = double.parse(noPeople);
 
     double percentage = (100 + percent1) / 100;
     double tip = (percentage * price1) - price1;
     double tips = double.parse(tip.toStringAsFixed(2)) / noPeople1;
     double totalTip = tips * noPeople1;
     double totalBill = price1 + totalTip;
+
     List<String> allAmounts = [
       totalBill.toString(),
       totalTip.toString(),
@@ -124,8 +134,8 @@ class CalculationLogic {
   }
 
   static List<String> calculateGST(String price, String rate, bool gstInclusive){
-    int price1 = int.parse(price);
-    int rate1 = int.parse(rate);
+    double price1 = double.parse(price);
+    double rate1 = double.parse(rate);
     double pregst;
     double totalgst;
 

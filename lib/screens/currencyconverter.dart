@@ -1,7 +1,6 @@
 import 'package:calculatorapp/models/currencyrates.dart';
 import 'package:calculatorapp/utils/calculationlogic.dart';
 import 'package:calculatorapp/utils/constants.dart';
-import 'package:calculatorapp/utils/networkutil.dart';
 import 'package:calculatorapp/utils/randomutils.dart';
 import 'package:calculatorapp/utils/repository.dart';
 import 'package:calculatorapp/widgets/buttongrid2.dart';
@@ -19,7 +18,6 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   String currentSelection1 = 'USD';
   String currentSelection2 = 'EUR';
   var currencies = countryNameMap.keys.toList();
-  Future<Currency> customerData;
   Currency currencyData;
   TextEditingControllerWorkaround valueController =
       new TextEditingControllerWorkaround();
@@ -31,17 +29,92 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
     try {
       currencyData = await repository.getExchangeRate(country);
     } catch (e) {
-      print('Exc');
+      showErrorModal();
     }
     setState(() {
       if (currencyData != null) {
         displayString2 = CalculationLogic.convertCurrency(
             currencyData.rates[currentSelection2].toString(), displayString1);
-      } else {
-        showErrorModal();
-        print('check your internet');
-      }
+      } else {}
     });
+  }
+
+  showSelectionModal(int select) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            insetAnimationCurve: Curves.easeIn,
+            insetAnimationDuration: Duration(milliseconds: 400),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                gradient: LinearGradient(colors: [
+                  Color(0xFFD46286),
+                  Color(0xFF781C50),
+                ], begin: Alignment.topLeft, end: Alignment.bottomCenter),
+              ),
+              height: 340,
+              width: 120,
+              child: ListView.separated(
+                  itemCount: currencies.length,
+                  separatorBuilder: (context, position) => Divider(
+                        color: Colors.white.withOpacity(0.3),
+                      ),
+                  itemBuilder: (BuildContext context, int position) {
+                    return ListTile(
+                      onTap: () {
+                        setState(() {
+                          switch (select) {
+                            case 0:
+                              currentSelection1 =
+                                  countryNameMap.keys.elementAt(position);
+                              loadRates(currentSelection1);
+                              break;
+                            case 1:
+                              currentSelection2 =
+                                  countryNameMap.keys.elementAt(position);
+                              loadRates(currentSelection1);
+                              break;
+                          }
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      trailing: CircleAvatar(
+                        backgroundColor: Color(0xFF270F33).withOpacity(0.6),
+                        child: Text(
+                          currencySymbol(
+                              countryNameMap.keys.elementAt(position)),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Google',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      title: Text(
+                        countryNameMap.keys.elementAt(position),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Google',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      subtitle: Text(
+                        countryNameMap.values.elementAt(position),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Google',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    );
+                  }),
+            ),
+          );
+        });
   }
 
   showErrorModal() {
@@ -51,32 +124,51 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
           return Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
-              backgroundColor: Color(0xFF270F33),
               elevation: 0,
               child: Container(
-                  height: 210,
+                  height: 160,
                   width: 120,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          LineIcons.exclamation,
-                          size: 80,
-                          color: Colors.white,
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFFD46286),
+                                  Color(0xFF781C50),
+                                ],
+                                tileMode: TileMode.mirror,
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                topLeft: Radius.circular(10))),
+                        width: double.infinity,
+                        height: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Icon(
+                            LineIcons.exclamation_circle,
+                            size: 80,
+                            color: Colors.white,
+                          ),
                         ),
-                        Padding(padding: const EdgeInsets.all(5)),
-                        Text(
-                          'No Internet Connection',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Google',
-                              fontSize: 17,
-                              fontWeight: FontWeight.w400),
+                      ),
+                      Container(
+                        width: 300,
+                        child: ListTile(
+                          title: Text(
+                            'No Internet Connection!',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Google',
+                                fontSize: 17,
+                                fontWeight: FontWeight.w400),
+                          ),
                         ),
-                        Padding(padding: const EdgeInsets.all(5)),
-                      ],
-                    ),
+                      )
+                    ],
                   )));
         });
   }
@@ -85,208 +177,211 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     valueController.text = "$displayString1";
-    double marginTop = deviceSize.height / 8 - 18;
-    return Container(
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              Container(
-                color: Color(0xFFFAFAFA),
-                child: SizedBox(
-                  height: 110,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Container(
-                          width: 200,
-                          child: TextField(
-                            controller: valueController,
-//                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                                color: Color(0xFF270F33),
-                                fontFamily: 'Google',
-                                fontSize: 40,
-                                fontWeight: FontWeight.w400),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              prefixText:
-                                  currencySymbol(currentSelection1) + ' ',
-                              prefixStyle: TextStyle(
-                                  color: Color(0xFF270F33).withOpacity(0.9),
+    double marginTop = 75;
+    return SingleChildScrollView(
+      child: Container(
+        color: Color(0xFF270F33),
+        width: deviceSize.width,
+        constraints: BoxConstraints(minHeight: deviceSize.height - 140),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Container(
+                  color: Color(0xFFFAFAFA),
+                  child: SizedBox(
+                    height: 110,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Container(
+                            width: 200,
+                            child: TextField(
+                              controller: valueController,
+                              style: TextStyle(
+                                  color: Color(0xFF270F33),
                                   fontFamily: 'Google',
-                                  fontSize: 30,
+                                  fontSize: 40,
                                   fontWeight: FontWeight.w400),
-                            ),
-                            readOnly: true,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: DropdownButton(
-                          onChanged: (newSelection) {
-                            setState(() {
-                              currentSelection1 = newSelection;
-                            });
-                          },
-                          icon: Icon(Icons.keyboard_arrow_down),
-                          underline: Container(),
-                          elevation: 1,
-                          dropdownColor: Color(0xFF3C174D),
-                          value: currentSelection1,
-                          items: currencies
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(
-                                value,
-                                style: TextStyle(
-                                    color: Color(0xFF4E4E4E),
-                                    fontFamily: 'Google',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                color: Color(0xFF270F33),
-                child: SizedBox(
-                  height: 110,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: DropdownButton(
-                          onChanged: (newSelection) {
-                            setState(() {
-                              currentSelection2 = newSelection;
-                            });
-                          },
-                          icon: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Colors.white,
-                          ),
-                          underline: Container(),
-                          value: currentSelection2,
-                          elevation: 1,
-                          dropdownColor: Color(0xFF3C174D),
-                          items: currencies
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(
-                                value,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Google',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: RichText(
-                          text: TextSpan(text: '', children: [
-                            new TextSpan(children: [
-                              TextSpan(
-                                text: currencySymbol(currentSelection2),
-                                style: TextStyle(
-                                    color: Colors.white,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                prefixText:
+                                    currencySymbol(currentSelection1) + ' ',
+                                prefixStyle: TextStyle(
+                                    color: Color(0xFF270F33).withOpacity(0.8),
                                     fontFamily: 'Google',
                                     fontSize: 30,
                                     fontWeight: FontWeight.w400),
                               ),
-                              TextSpan(
-                                  text: ' ' + displayString2,
+                              readOnly: true,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: InkWell(
+                            onTap: () {
+                              showSelectionModal(0);
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  currentSelection1,
+                                  style: TextStyle(
+                                      color: Color(0xFF3C174D),
+                                      fontFamily: 'Google',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(2),
+                                ),
+                                Icon(
+                                  LineIcons.arrow_circle_down,
+                                  color: Color(0xFF3C174D),
+                                  size: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  color: Color(0xFF270F33),
+                  child: SizedBox(
+                    height: 110,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: InkWell(
+                            onTap: () {
+                              showSelectionModal(1);
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  currentSelection2,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'Google',
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.w400)),
-                            ])
-                          ]),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(2),
+                                ),
+                                Icon(
+                                  LineIcons.arrow_circle_up,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-//                        child: Text(
-//                          currencySymbol(currentSelection2)+' '+ displayString2,
-
-//                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: RichText(
+                            text: TextSpan(text: '', children: [
+                              new TextSpan(children: [
+                                TextSpan(
+                                  text: currencySymbol(currentSelection2),
+                                  style: TextStyle(
+                                      color: Colors.white.withOpacity(0.7),
+                                      fontFamily: 'Google',
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                TextSpan(
+                                    text: ' ' + displayString2,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Google',
+                                        fontSize: 40,
+                                        fontWeight: FontWeight.w400)),
+                              ])
+                            ]),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: deviceSize.width,
+                  constraints: BoxConstraints(maxHeight: 375),
+                  color: Color(0xFF270F33),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(3),
                       ),
+                      ButtonGrid2(
+                        onTap: _onPressed,
+                      )
                     ],
+                  ),
+                )
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.only(top: marginTop),
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: 65,
+                height: 65,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.all(Radius.circular(35))),
+                child: Container(
+                  margin: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [
+                            Color(0xFFD46286),
+                            Color(0xFF781C50),
+                          ],
+                          tileMode: TileMode.mirror,
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(30))),
+                  child: Icon(
+                    LineIcons.refresh,
+                    color: Colors.white,
+                    size: 27,
                   ),
                 ),
               ),
-              Expanded(
-                  child: Container(
-                width: deviceSize.width,
-                height: deviceSize.height,
-                color: Color(0xFF270F33),
-                child: ListView(
-                  children: [
-                    ButtonGrid2(
-                      onTap: _onPressed,
-                    )
-                  ],
-                ),
-              ))
-            ],
-          ),
-          Container(
-            margin: EdgeInsets.only(top: marginTop),
-            alignment: Alignment.topCenter,
-            child: Container(
-              width: 65,
-              height: 65,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.all(Radius.circular(35))),
-              child: Container(
-                margin: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [
-                          Color(0xFFD46286),
-                          Color(0xFF781C50),
-                        ],
-                        tileMode: TileMode.mirror,
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter),
-                    borderRadius: const BorderRadius.all(Radius.circular(30))),
-                child: Icon(
-                  LineIcons.refresh,
-                  color: Colors.white,
-                  size: 27,
-                ),
-              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   void _onPressed({String buttonText}) {
-    if (displayString1 == '0.00') {
-      displayString1 = '';
+    String displayStringMeth = displayString1;
+    if (displayStringMeth == '0.00') {
+      displayStringMeth = '';
     }
-    if (buttonText == 'C') {
+    if (buttonText == Calculations.PERIOD) {
+      return setState(() {
+        displayString1 = CalculationLogic.addPeriod(displayStringMeth);
+      });
+    } else if (buttonText == 'C') {
       return setState(() {
         String newDisplayString = displayString1;
-        if (displayString1.length == 0) {
-          displayString1 = '0.00';
+        if (displayString1.length == 1) {
+          newDisplayString = '0.00';
         } else {
           newDisplayString =
               newDisplayString.substring(0, displayString1.length - 1);
@@ -299,7 +394,8 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
       });
     } else {
       return setState(() {
-        displayString1 += "$buttonText";
+        displayStringMeth += "$buttonText";
+        displayString1 = displayStringMeth;
       });
     }
   }

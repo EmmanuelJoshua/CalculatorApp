@@ -10,6 +10,7 @@ void main() {
       expect(test1, "€12.25");
       expect(test2, "\$25.56");
     });
+
     test('Test Date', () {
       var test1 = dateIsBeforeToday('2020-07-03');
 

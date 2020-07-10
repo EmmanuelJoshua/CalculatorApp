@@ -33,6 +33,7 @@ dependencies:
   google_nav_bar: ^2.2.0
   shared_preferences: ^0.5.7+3
   intl: ^0.16.1
+  bottom_bar_page_transition: ^1.0.2
 
 dev_dependencies:
   flutter_test:

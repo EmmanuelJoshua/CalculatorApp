@@ -1,3 +1,4 @@
+import 'package:bottom_bar_page_transition/bottom_bar_page_transition.dart';
 import 'package:calculatorapp/screens/calculator.dart';
 import 'package:calculatorapp/screens/currencyconverter.dart';
 import 'package:calculatorapp/screens/gstcalculator.dart';
@@ -13,102 +14,129 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin<HomeScreen> {
   int selectedIndex = 0;
 
   static List<Widget> widgetOptions = <Widget>[
     CurrencyConverter(),
     GSTCalc(),
-    Calculator(),
     TipCalculator(),
+    Calculator()
 //    Container(),
   ];
 
   static List<String> screenNames = <String>[
     'Currency Converter',
     'GST Calculator',
+    'Tip Calculator',
     'Calculator',
-    'Tip Calculator'
   ];
+  AnimationController _controller;
+  Animation _animation;
+
+  @override
+  void initState() {
+    _controller =
+        AnimationController(vsync: this);
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            title: Text(
-              screenNames[selectedIndex],
-              style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Google',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400),
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(LineIcons.history),
-                onPressed: () {
-                  var router1 = MaterialPageRoute(
-                      builder: (BuildContext context) => CalcHistory());
-                  Navigator.of(context).push(router1);
-                },
-              )
-            ],
-            elevation: 0,
-            backgroundColor: Color(0xFF2B1137)),
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.all(3),
-          child: GNav(
-            onTabChange: (index) {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-            textStyle: TextStyle(
+      appBar: AppBar(
+          title: Text(
+            screenNames[selectedIndex],
+            style: TextStyle(
                 color: Colors.white,
-                fontFamily: 'Graphik',
-                fontSize: 14,
+                fontFamily: 'Google',
+                fontSize: 20,
                 fontWeight: FontWeight.w400),
-            selectedIndex: selectedIndex,
-            gap: 8,
-            iconSize: 24,
-            activeColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            tabMargin: const EdgeInsets.all(5),
-            duration: Duration(milliseconds: 800),
-            tabBackgroundGradient: LinearGradient(
-                colors: [
-                  Color(0xFFD46286),
-                  Color(0xFF781C50),
-                ],
-                tileMode: TileMode.mirror,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight),
-            tabs: [
-              GButton(
-                icon: LineIcons.refresh,
-                text: 'Convert',
-              ),
-              GButton(
-                icon: LineIcons.line_chart,
-                text: 'GST',
-              ),
-              GButton(
-                curve: Curves.bounceIn,
-                icon: LineIcons.calculator,
-                text: 'Calculate',
-              ),
-              GButton(
-                icon: LineIcons.money,
-                text: 'Tips',
-              ),
-//                GButton(
-//                  icon: LineIcons.ticket,
-//                  text: 'Invoice',
-//                ),
-            ],
           ),
+          actions: [
+            IconButton(
+              icon: Icon(LineIcons.history),
+              onPressed: () {
+                var router1 = MaterialPageRoute(
+                    builder: (BuildContext context) => CalcHistory());
+                Navigator.of(context).push(router1);
+              },
+            )
+          ],
+          elevation: 0,
+          backgroundColor: Color(0xFF2B1137)),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(3),
+        child: GNav(
+          onTabChange: (index) {
+            setState(() {
+              selectedIndex = index;
+            });
+          },
+          textStyle: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Graphik',
+              fontSize: 14,
+              fontWeight: FontWeight.w400),
+          selectedIndex: selectedIndex,
+          gap: 8,
+          iconSize: 24,
+          activeColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          tabMargin: const EdgeInsets.all(5),
+          duration: Duration(milliseconds: 800),
+          curve: Curves.ease,
+          tabBackgroundGradient: LinearGradient(
+              colors: [
+                Color(0xFFD46286),
+                Color(0xFF781C50),
+              ],
+              tileMode: TileMode.mirror,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight),
+          tabs: [
+            GButton(
+              icon: LineIcons.refresh,
+              text: 'Convert',
+            ),
+            GButton(
+              icon: LineIcons.ticket,
+              text: 'GST',
+            ),
+            GButton(
+              icon: LineIcons.money,
+              text: 'Tips',
+            ),
+            GButton(
+              icon: LineIcons.calculator,
+              text: 'Calculate',
+            ),
+          ],
         ),
-        backgroundColor: Color(0xFFF1F7FC),
-        body: widgetOptions.elementAt(selectedIndex));
+      ),
+      backgroundColor: Color(0xFFF1F7FC),
+      body: AnimatedSwitcher(
+        switchInCurve: Curves.fastOutSlowIn,
+          switchOutCurve: Curves.fastOutSlowIn,
+          duration: Duration(milliseconds: 300),
+          transitionBuilder: (Widget child, Animation<double> animation) =>
+              FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+          child: widgetOptions.elementAt(selectedIndex)),
+
+//        child: LayoutBuilder(
+//          builder: (BuildContext context, BoxConstraints viewport){
+//            return SingleChildScrollView(
+//              child: ConstrainedBox(
+//                constraints: BoxConstraints(minHeight: viewport.maxHeight),
+//              ),
+//            );
+//          },
+//        )
+    );
   }
 }

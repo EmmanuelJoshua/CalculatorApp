@@ -42,7 +42,7 @@ class CustomButton extends StatelessWidget {
           ),
         ),
         elevation: 0,
-        backgroundColor: Color(0xFF7E8A9A),
+            backgroundColor: Colors.white30,
         splashColor: Colors.blueGrey[100],
       ));
     } else if (isClear) {
@@ -71,7 +71,7 @@ class CustomButton extends StatelessWidget {
                 fontFamily: 'Google',
                 fontSize: 25,
                 fontWeight: FontWeight.w400,
-                color: Color(0xFFAEAEAE)),
+                color: Color(0xFF2B1137)),
           ),
           elevation: 0,
           backgroundColor: Colors.white,
