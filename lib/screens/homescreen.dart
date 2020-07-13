@@ -1,8 +1,8 @@
-import 'package:bottom_bar_page_transition/bottom_bar_page_transition.dart';
 import 'package:calculatorapp/screens/calculator.dart';
 import 'package:calculatorapp/screens/currencyconverter.dart';
 import 'package:calculatorapp/screens/gstcalculator.dart';
 import 'package:calculatorapp/screens/history.dart';
+import 'package:calculatorapp/screens/scan.dart';
 import 'package:calculatorapp/screens/tipcalculator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +61,14 @@ class _HomeScreenState extends State<HomeScreen>
               onPressed: () {
                 var router1 = MaterialPageRoute(
                     builder: (BuildContext context) => CalcHistory());
+                Navigator.of(context).push(router1);
+              },
+            ),
+            IconButton(
+              icon: Icon(LineIcons.qrcode),
+              onPressed: () {
+                var router1 = MaterialPageRoute(
+                    builder: (BuildContext context) => Scan());
                 Navigator.of(context).push(router1);
               },
             )
