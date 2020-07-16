@@ -59,6 +59,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
               height: 340,
               width: 120,
               child: ListView.separated(
+                physics: BouncingScrollPhysics(),
                   itemCount: currencies.length,
                   separatorBuilder: (context, position) => Divider(
                         color: Colors.white.withOpacity(0.3),
@@ -179,6 +180,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
     valueController.text = "$displayString1";
     double marginTop = 75;
     return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
       child: Container(
         color: Color(0xFF270F33),
         width: deviceSize.width,

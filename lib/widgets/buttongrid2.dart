@@ -7,7 +7,6 @@ class ButtonGrid2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var deviceSize = MediaQuery.of(context).size;
      return Column(
        children: [
          Container(

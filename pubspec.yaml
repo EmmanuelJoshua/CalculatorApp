@@ -38,6 +38,7 @@ dependencies:
   share_extend: ^1.1.9
   flutter_barcode_scanner: ^0.0.9
   flutter_linkify: ^1.0.3
+  sliding_up_panel: ^1.0.2
 
 dev_dependencies:
   flutter_test:

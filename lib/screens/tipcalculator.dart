@@ -140,6 +140,7 @@ class _TipCalculatorState extends State<TipCalculator> {
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
       child: Container(
           width: deviceSize.width,
           constraints: BoxConstraints(minHeight: deviceSize.height - 140),

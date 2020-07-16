@@ -1,9 +1,5 @@
-import 'dart:io' show Platform;
-import 'dart:ui';
-
 import 'package:calculatorapp/models/historymodel.dart';
 import 'package:calculatorapp/utils/dbhelper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:function_tree/function_tree.dart';
 
 class Calculations {

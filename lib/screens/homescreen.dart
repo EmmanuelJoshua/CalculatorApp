@@ -2,8 +2,8 @@ import 'package:calculatorapp/screens/calculator.dart';
 import 'package:calculatorapp/screens/currencyconverter.dart';
 import 'package:calculatorapp/screens/gstcalculator.dart';
 import 'package:calculatorapp/screens/history.dart';
-import 'package:calculatorapp/screens/scan.dart';
 import 'package:calculatorapp/screens/tipcalculator.dart';
+import 'package:calculatorapp/widgets/customslideup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -37,8 +37,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
-    _controller =
-        AnimationController(vsync: this);
+    _controller = AnimationController(vsync: this);
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
     super.initState();
   }
@@ -67,9 +66,7 @@ class _HomeScreenState extends State<HomeScreen>
             IconButton(
               icon: Icon(LineIcons.qrcode),
               onPressed: () {
-                var router1 = MaterialPageRoute(
-                    builder: (BuildContext context) => Scan());
-                Navigator.of(context).push(router1);
+                Navigator.of(context).push(CustomSlideUp());
               },
             )
           ],
@@ -90,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen>
               fontWeight: FontWeight.w400),
           selectedIndex: selectedIndex,
           gap: 8,
+          backgroundColor: Color(0xFFF1F7FC),
           iconSize: 24,
           activeColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -124,9 +122,9 @@ class _HomeScreenState extends State<HomeScreen>
           ],
         ),
       ),
-      backgroundColor: Color(0xFFF1F7FC),
+      backgroundColor: Color(0xFF270F33),
       body: AnimatedSwitcher(
-        switchInCurve: Curves.fastOutSlowIn,
+          switchInCurve: Curves.fastOutSlowIn,
           switchOutCurve: Curves.fastOutSlowIn,
           duration: Duration(milliseconds: 300),
           transitionBuilder: (Widget child, Animation<double> animation) =>
@@ -135,16 +133,6 @@ class _HomeScreenState extends State<HomeScreen>
                 child: child,
               ),
           child: widgetOptions.elementAt(selectedIndex)),
-
-//        child: LayoutBuilder(
-//          builder: (BuildContext context, BoxConstraints viewport){
-//            return SingleChildScrollView(
-//              child: ConstrainedBox(
-//                constraints: BoxConstraints(minHeight: viewport.maxHeight),
-//              ),
-//            );
-//          },
-//        )
     );
   }
 }
